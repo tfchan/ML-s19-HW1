@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """Main program for homework 1."""
 from argparse import ArgumentParser
 
