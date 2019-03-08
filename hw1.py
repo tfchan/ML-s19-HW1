@@ -9,6 +9,13 @@ def read_input(file_name):
     return lines
 
 
+def prepare_data(lines):
+    """Convert raw lines to column major list."""
+    rows = [list(map(float, line.strip().split(','))) for line in lines]
+    prepared = [list(column) for column in zip(*rows)]
+    return prepared
+
+
 def main():
     """Parse arguments and pass them to task."""
     parser = ArgumentParser(description='Linear regression of 1-D input')
@@ -17,6 +24,7 @@ def main():
     parser.add_argument('lambda', type=int, help='Lambda parameter for LSE')
     args = parser.parse_args()
     lines = read_input(args.file_name)
+    data = prepare_data(lines)
 
 
 if __name__ == '__main__':
