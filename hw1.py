@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Main program for homework 1."""
 from argparse import ArgumentParser
+import regressor1d
 
 
 def read_input(file_name):
@@ -22,10 +23,12 @@ def main():
     parser = ArgumentParser(description='Linear regression of 1-D input')
     parser.add_argument('file_name', type=str, help='Input file name')
     parser.add_argument('n', type=int, help='Number of polynomial bases')
-    parser.add_argument('lambda', type=int, help='Lambda parameter for LSE')
+    parser.add_argument('lambda_', type=int, help='Lambda parameter for LSE')
     args = parser.parse_args()
     lines = read_input(args.file_name)
     data = prepare_data(lines)
+
+    lse_regressor = regressor1d.LSERegressor(args.n, args.lambda_)
 
 
 if __name__ == '__main__':

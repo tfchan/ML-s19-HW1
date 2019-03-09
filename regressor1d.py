@@ -1,4 +1,5 @@
 """Implementation of 1-D regressor."""
+import numpy as np
 
 
 class SimpleRegressor:
