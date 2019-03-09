@@ -22,3 +22,15 @@ def lu_decomposition(a):
     assert a.shape[0] == a.shape[1], 'Must input square matrix'
 
     p, pa = _pivoting(a)
+
+    a_size = a.shape[0]
+    l_ = np.zeros((a_size, a_size))
+    u = np.zeros((a_size, a_size))
+    for j in range(a_size):
+        l_[j][j] = 1
+        for i in range(j + 1):
+            u[i][j] = pa[i][j] - sum(l_[i][k] * u[k][j] for k in range(i))
+        for i in range(j + 1, a_size):
+            l_[i][j] = pa[i][j] - sum(l_[i][k] * u[k][j] for k in range(j))
+            l_[i][j] /= u[j][j]
+    return p, l_, u
