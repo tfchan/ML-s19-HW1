@@ -8,6 +8,7 @@ class SimpleRegressor:
     def __init__(self, max_order):
         """Initialize the regressor with max_order polynomial."""
         self._order = max_order
+        self._coefficient = []
 
 
 class LSERegressor(SimpleRegressor):
@@ -17,6 +18,16 @@ class LSERegressor(SimpleRegressor):
         """Initialize LSE with lambda for regularization."""
         super().__init__(max_order)
         self._lambda = lambda_
+
+    def fit(self, input_data, output_data):
+        """Fit input data with output data."""
+        a = [[d ** order for order in range(self._order)] for d in input_data]
+        ata = np.dot(np.transpose(a), a)
+        ata_lambda = ata + self._lambda * np.identity(ata.shape[0])
+        ata_lambda_inv = np.linalg.inv(ata_lambda)
+        atb = np.dot(np.transpose(a), output_data)
+        w = np.dot(ata_lambda_inv, atb)
+        self._coefficient = list(w)
 
 
 class NewtonsRegressor(SimpleRegressor):
