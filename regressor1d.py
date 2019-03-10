@@ -1,5 +1,6 @@
 """Implementation of 1-D regressor."""
 import numpy as np
+import matrix
 
 
 class SimpleRegressor:
@@ -53,7 +54,7 @@ class LSERegressor(SimpleRegressor):
         a = self._calculate_a(input_data)
         ata = np.transpose(a) @ a
         ata_lambda = ata + self._lambda * np.identity(ata.shape[0])
-        ata_lambda_inv = np.linalg.inv(ata_lambda)
+        ata_lambda_inv = matrix.inverse(ata_lambda)
         atb = np.transpose(a) @ output_data
         w = ata_lambda_inv @ atb
         self._coefficient = w
@@ -71,7 +72,7 @@ class NewtonsRegressor(SimpleRegressor):
             at = np.transpose(a)
             f_1 = 2 * at @ a @ w0 - 2 * at @ b
             f_2 = 2 * at @ a
-            w1 = w0 - np.linalg.inv(f_2) @ f_1
+            w1 = w0 - matrix.inverse(f_2) @ f_1
             if np.allclose(w1, w0):
                 break
             w0 = w1
