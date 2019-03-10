@@ -61,3 +61,18 @@ class LSERegressor(SimpleRegressor):
 
 class NewtonsRegressor(SimpleRegressor):
     """1-D polynomial regressor using Newton's method."""
+
+    def fit(self, input_data, output_data):
+        """Fit input data with output data."""
+        w0 = np.random.rand(self._order)
+        while True:
+            a = self._calculate_a(input_data)
+            b = output_data
+            at = np.transpose(a)
+            f_1 = 2 * at @ a @ w0 - 2 * at @ b
+            f_2 = 2 * at @ a
+            w1 = w0 - np.linalg.inv(f_2) @ f_1
+            if np.allclose(w1, w0):
+                break
+            w0 = w1
+        self._coefficient = w1
