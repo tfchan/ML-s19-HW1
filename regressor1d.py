@@ -10,11 +10,15 @@ class SimpleRegressor:
         self._order = max_order
         self._coefficient = [0] * self._order
 
-    def predict(self, input_data):
+    def predict(self, input_data, real_output=None):
         """Predict output using learnt parameters."""
         a = [[d ** order for order in range(self._order)] for d in input_data]
         output = np.dot(a, self._coefficient)
-        return list(output)
+        if real_output is None:
+            return list(output)
+        else:
+            se = sum((output - real_output) ** 2)
+            return list(output), se
 
     def get_equation(self):
         """Return string of the polynomail equation."""
