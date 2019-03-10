@@ -8,12 +8,18 @@ class SimpleRegressor:
     def __init__(self, max_order):
         """Initialize the regressor with max_order polynomial."""
         self._order = max_order
-        self._coefficient = [0] * self._order
+        self._coefficient = np.zeros(self._order)
+
+    def _calculate_a(self, input_data):
+        """Calculate a by substituting input into each order of x."""
+        a = np.asarray(
+            [[d ** order for order in range(self._order)] for d in input_data])
+        return a
 
     def predict(self, input_data, real_output=None):
         """Predict output using learnt parameters."""
-        a = [[d ** order for order in range(self._order)] for d in input_data]
-        output = np.dot(a, self._coefficient)
+        a = self._calculate_a(input_data)
+        output = a @ self._coefficient
         if real_output is None:
             return list(output)
         else:
@@ -44,13 +50,13 @@ class LSERegressor(SimpleRegressor):
 
     def fit(self, input_data, output_data):
         """Fit input data with output data."""
-        a = [[d ** order for order in range(self._order)] for d in input_data]
-        ata = np.dot(np.transpose(a), a)
+        a = self._calculate_a(input_data)
+        ata = np.transpose(a) @ a
         ata_lambda = ata + self._lambda * np.identity(ata.shape[0])
         ata_lambda_inv = np.linalg.inv(ata_lambda)
-        atb = np.dot(np.transpose(a), output_data)
-        w = np.dot(ata_lambda_inv, atb)
-        self._coefficient = list(w)
+        atb = np.transpose(a) @ output_data
+        w = ata_lambda_inv @ atb
+        self._coefficient = w
 
 
 class NewtonsRegressor(SimpleRegressor):
