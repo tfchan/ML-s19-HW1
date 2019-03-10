@@ -19,6 +19,13 @@ def prepare_data(lines):
     return prepared
 
 
+def print_result(method_name, equation, error):
+    """Print found equation and error of a given method name."""
+    print(f'{method_name}:')
+    print(f'Fitting line: {equation}')
+    print(f'Total error: {error}')
+
+
 def main():
     """Parse arguments and pass them to task."""
     parser = ArgumentParser(description='Linear regression of 1-D input')
@@ -37,6 +44,11 @@ def main():
     newtons_regressor.fit(data[0], data[1])
     newtons_output, newtons_error = newtons_regressor.predict(
         data[0], real_output=data[1])
+
+    print_result('LSE', lse_regressor.get_equation(), lse_error)
+    print()
+    print_result("Newton's method", newtons_regressor.get_equation(),
+                 newtons_error)
 
     plt.figure()
     plt.subplot(211)
