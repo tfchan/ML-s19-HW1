@@ -8,7 +8,13 @@ class SimpleRegressor:
     def __init__(self, max_order):
         """Initialize the regressor with max_order polynomial."""
         self._order = max_order
-        self._coefficient = []
+        self._coefficient = [0] * self._order
+
+    def predict(self, input_data):
+        """Predict output using learnt parameters."""
+        a = [[d ** order for order in range(self._order)] for d in input_data]
+        output = np.dot(a, self._coefficient)
+        return list(output)
 
 
 class LSERegressor(SimpleRegressor):
