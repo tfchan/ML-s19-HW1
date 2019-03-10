@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Main program for homework 1."""
 from argparse import ArgumentParser
+import matplotlib.pyplot as plt
 import regressor1d
 
 
@@ -29,6 +30,22 @@ def main():
     data = prepare_data(lines)
 
     lse_regressor = regressor1d.LSERegressor(args.n, args.lambda_)
+    lse_regressor.fit(data[0], data[1])
+    lse_output, lse_error = lse_regressor.predict(data[0], real_output=data[1])
+
+    newtons_regressor = regressor1d.NewtonsRegressor(args.n)
+    newtons_regressor.fit(data[0], data[1])
+    newtons_output, newtons_error = newtons_regressor.predict(
+        data[0], real_output=data[1])
+
+    plt.figure()
+    plt.subplot(211)
+    plt.plot(data[0], data[1], 'ro')
+    plt.plot(data[0], lse_output, 'b-')
+    plt.subplot(212)
+    plt.plot(data[0], data[1], 'ro')
+    plt.plot(data[0], newtons_output, 'b-')
+    plt.show()
 
 
 if __name__ == '__main__':
