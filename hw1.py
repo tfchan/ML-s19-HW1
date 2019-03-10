@@ -26,6 +26,24 @@ def print_result(method_name, equation, error):
     print(f'Total error: {error}')
 
 
+def perform_regression(methods, input_data, output_data):
+    """Perform regression on data using different methods and show result."""
+    plt.figure()
+    method_count = 1
+    for method_name, method in methods.items():
+        method.fit(input_data, output_data)
+        prediction, sq_error = method.predict(
+            input_data, real_output=output_data)
+        print_result(method_name, method.get_equation(), sq_error)
+        print()
+        ax = plt.subplot(len(methods), 1, method_count)
+        ax.set_title(method_name)
+        ax.plot(input_data, output_data, 'ro')
+        ax.plot(input_data, prediction, 'b-')
+        method_count += 1
+    plt.show()
+
+
 def main():
     """Parse arguments and pass them to task."""
     parser = ArgumentParser(description='Linear regression of 1-D input')
@@ -36,28 +54,9 @@ def main():
     lines = read_input(args.file_name)
     data = prepare_data(lines)
 
-    lse_regressor = regressor1d.LSERegressor(args.n, args.lambda_)
-    lse_regressor.fit(data[0], data[1])
-    lse_output, lse_error = lse_regressor.predict(data[0], real_output=data[1])
-
-    newtons_regressor = regressor1d.NewtonsRegressor(args.n)
-    newtons_regressor.fit(data[0], data[1])
-    newtons_output, newtons_error = newtons_regressor.predict(
-        data[0], real_output=data[1])
-
-    print_result('LSE', lse_regressor.get_equation(), lse_error)
-    print()
-    print_result("Newton's method", newtons_regressor.get_equation(),
-                 newtons_error)
-
-    plt.figure()
-    plt.subplot(211)
-    plt.plot(data[0], data[1], 'ro')
-    plt.plot(data[0], lse_output, 'b-')
-    plt.subplot(212)
-    plt.plot(data[0], data[1], 'ro')
-    plt.plot(data[0], newtons_output, 'b-')
-    plt.show()
+    methods = {'LSE': regressor1d.LSERegressor(args.n, args.lambda_),
+               "Newton's method": regressor1d.NewtonsRegressor(args.n)}
+    perform_regression(methods, data[0], data[1])
 
 
 if __name__ == '__main__':
