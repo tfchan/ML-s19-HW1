@@ -16,6 +16,19 @@ class SimpleRegressor:
         output = np.dot(a, self._coefficient)
         return list(output)
 
+    def get_equation(self):
+        """Return string of the polynomail equation."""
+        equation = ''
+        for i, coe in reversed(list(enumerate(self._coefficient))):
+            if i >= len(self._coefficient) - 1:
+                equation += f'{coe}'
+            elif coe >= 0:
+                equation += f' + {coe}'
+            else:
+                equation += f' - {-coe}'
+            equation += f'X^{i}' if i != 0 else ''
+        return equation
+
 
 class LSERegressor(SimpleRegressor):
     """1-D polynomial regressor using LSE."""
